@@ -2,7 +2,6 @@
 #############      this project is part of my graduation project and it intends to make a fully functioned IDE from scratch    ########
 #############      I've borrowed a function (serial_ports()) from a guy in stack overflow whome I can't remember his name, so I gave hime the copyrights of this function, thank you  ########
 
-
 import sys
 import glob
 import serial
@@ -13,7 +12,6 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
 
 @contextlib.contextmanager
 def stdoutIO(stdout=None):
@@ -366,11 +364,6 @@ class UI(QMainWindow):
     def Run(self):
         if self.port_flag == 0:
             mytext = text.toPlainText()
-            #
-            ##### Compiler Part
-            #
-            #            ide.create_file(mytext)
-            #            ide.upload_file(self.portNo)
             text2.clear()
             codeObejct = compile(mytext, 'code', 'exec')
             with stdoutIO() as s:
@@ -378,10 +371,7 @@ class UI(QMainWindow):
                     exec(codeObejct)
                 except:
                     print("Something wrong with the code")
-
             text2.append(s.getvalue())
-            #text2.append("Sorry, there is no attached compiler.")
-
         else:
             text2.append("Please Select Your Port Number First")
     def RunF(self):
@@ -399,16 +389,10 @@ class UI(QMainWindow):
                         exec(codeObejct)
                     except:
                         print("Something wrong with the code")
-
                 text2.append(s.getvalue())
-                # text2.append("Sorry, there is no attached compiler.")
-
             else:
                 text2.clear()
                 text2.append("Please Select Your Port Number First")
-
-
-
 
 #
 #
