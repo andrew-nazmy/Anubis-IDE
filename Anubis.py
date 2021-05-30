@@ -132,6 +132,12 @@ class Widget(QWidget):
         tab = QTabWidget()
         tx = text_widget()
         tab.addTab(tx, "Tab" + "1")
+        #text area for function mode
+        label=QLabel()
+        label.setText("function call area functionName(parameters separated with ,)")
+        global text3
+        text3 = QTextEdit()
+        text3.setDocumentTitle("function call")
 
         # second editor in which the error messeges and succeeded connections will be shown
         global text2
@@ -184,6 +190,8 @@ class Widget(QWidget):
         V_splitter = QSplitter(Qt.Vertical)
         V_splitter.addWidget(H_splitter)
         V_splitter.addWidget(text2)
+        V_splitter.addWidget(label)
+        V_splitter.addWidget(text3)
 
         Final_Layout = QHBoxLayout(self)
         Final_Layout.addWidget(V_splitter)
@@ -293,6 +301,7 @@ class UI(QMainWindow):
         filemenu = menu.addMenu('File')
         Port = menu.addMenu('Port')
         Run = menu.addMenu('Run')
+        RunF = menu.addMenu('Run function')
 
         # As any PC or laptop have many ports, so I need to list them to the User
         # so I made (Port_Action) to add the Ports got from (serial_ports()) function
@@ -315,6 +324,10 @@ class UI(QMainWindow):
         RunAction = QAction("Run", self)
         RunAction.triggered.connect(self.Run)
         Run.addAction(RunAction)
+        # Making and adding Run function Actions
+        RunfunctionAction = QAction("Run function", self)
+        RunfunctionAction.triggered.connect(self.RunF)
+        RunF.addAction(RunfunctionAction)
 
         # Making and adding File Features
         Save_Action = QAction("Save", self)
@@ -363,7 +376,26 @@ class UI(QMainWindow):
 
         else:
             text2.append("Please Select Your Port Number First")
+    def RunF(self):
+        if(text3.toPlainText()==""):
+            text2.append("error please provide function call")
+        else:
+            if self.port_flag == 0:
+                text2.clear()
+                mytext = text.toPlainText()
+                mytext = mytext+'\n'+text3.toPlainText()
+                codeObejct = compile(mytext, 'code', 'exec')
+                with stdoutIO() as s:
+                    try:
+                        exec(codeObejct)
+                    except:
+                        print("Something wrong with the code")
 
+                text2.append(s.getvalue())
+                # text2.append("Sorry, there is no attached compiler.")
+
+            else:
+                text2.append("Please Select Your Port Number First")
 
 
 
