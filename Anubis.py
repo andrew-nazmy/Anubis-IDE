@@ -13,7 +13,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from pathlib import Path
+
 
 @contextlib.contextmanager
 def stdoutIO(stdout=None):
@@ -137,9 +137,15 @@ class Widget(QWidget):
         label.setText("function call area functionName(parameters separated with ,)")
         global text3
         text3 = QTextEdit()
-        text3.setDocumentTitle("function call")
-
+        text3.setMaximumHeight(50)
+        label2 = QLabel()
+        label2.setText("wrap function tab")
+        global text4
+        text4 = QTextEdit()
+        text4.setMaximumHeight(200)
         # second editor in which the error messeges and succeeded connections will be shown
+        label1=QLabel()
+        label1.setText("output tab")
         global text2
         text2 = QTextEdit()
         text2.setReadOnly(True)
@@ -185,14 +191,16 @@ class Widget(QWidget):
         H_splitter.addWidget(Left_hbox_Layout)
         H_splitter.addWidget(Right_hbox_Layout)
         H_splitter.setStretchFactor(1, 1)
-
         # I defined a new splitter to seperate between the upper and lower sides of the window
         V_splitter = QSplitter(Qt.Vertical)
         V_splitter.addWidget(H_splitter)
-        V_splitter.addWidget(text2)
+
         V_splitter.addWidget(label)
         V_splitter.addWidget(text3)
-
+        V_splitter.addWidget(label2)
+        V_splitter.addWidget(text4)
+        V_splitter.addWidget(label1)
+        V_splitter.addWidget(text2)
         Final_Layout = QHBoxLayout(self)
         Final_Layout.addWidget(V_splitter)
 
@@ -377,13 +385,14 @@ class UI(QMainWindow):
         else:
             text2.append("Please Select Your Port Number First")
     def RunF(self):
-        if(text3.toPlainText()==""):
-            text2.append("error please provide function call")
+        if(text3.toPlainText()==""or text4.toPlainText()==""):
+            text2.append("error please provide function call and function buddy")
         else:
             if self.port_flag == 0:
                 text2.clear()
                 mytext = text.toPlainText()
-                mytext = mytext+'\n'+text3.toPlainText()
+                myfunction = text4.toPlainText()
+                mytext = mytext+'\n'+myfunction+'\n'+text3.toPlainText()
                 codeObejct = compile(mytext, 'code', 'exec')
                 with stdoutIO() as s:
                     try:
@@ -395,6 +404,7 @@ class UI(QMainWindow):
                 # text2.append("Sorry, there is no attached compiler.")
 
             else:
+                text2.clear()
                 text2.append("Please Select Your Port Number First")
 
 
